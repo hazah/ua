@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Layout</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      div[slot] {
+/*         background: black; */
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("[data-component]").forEach((template) => {
+          console.log(template);
+          customElements.define(template.id, class extends HTMLElement {
+            constructor() {
+              super();
+              this.attachShadow({ mode: "open" })
+                .appendChild(template.content.cloneNode(true));
+            }
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <template id="app-layout" data-component>
+      <style>
+        :host {
+          height: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+          grid-template-rows: 100px calc(100% - 200px) 100px;
+          grid-template-areas:
+            "main-context      main-context  main-context  main-context"
+            "secondary-context activity-area activity-area selection-area"
+            "secondary-context input-area    input-area    selection-area";
+        }
+        ::slotted([slot="main-context"]) {
+          grid-area: main-context;
+        }
+        ::slotted([slot="secondary-context"]) {
+          grid-area: secondary-context;
+        }
+        ::slotted([slot="activity-area"]) {
+          grid-area: activity-area;
+        }
+        ::slotted([slot="input-area"]) {
+          grid-area: input-area;
+        }
+        ::slotted([slot="selection-area"])  {
+          grid-area: selection-area;
+        }
+      </style>
+      <slot name="main-context">
+        Main Context
+      </slot>
+      <slot name="secondary-context">
+        Secondary Context
+      </slot>
+      <slot name="activity-area">
+        Activity
+      </slot>
+      <slot name="input-area">
+        Input
+      </slot>
+      <slot name="selection-area">
+        Selection
+      </slot>
+    </template>
+    <app-layout>
+      <main-context slot="main-context"></main-context>
+      <secondary-context slot="secondary-context"></secondary-context>
+      <activity-area slot="activity-area"></activity-area>
+      <input-area slot="input-area"></input-area>
+      <selection-area slot="selection-area"></selection-area>
+    </app-layout>
+  </body>
+</html>

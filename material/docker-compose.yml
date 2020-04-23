@@ -1,0 +1,15 @@
+version: '3'
+services:
+  material:
+    build: .
+    container_name: material
+    command: bash
+    tty: true
+    stdin_open: true
+    user: node
+    privileged: true
+    volumes:
+      - ~/.ssh:/home/node/.ssh
+      - .:/usr/src/app
+    ports:
+      - "8080:8080"
